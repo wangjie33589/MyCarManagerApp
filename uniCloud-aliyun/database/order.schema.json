@@ -1,1 +1,68 @@
-{"bsonType":"object","required":[],"permission":{"read":false,"create":false,"update":false,"delete":false},"properties":{"_id":{"description":"ID，系统自动生成"},"userId":{"title":"用户ID","foreignKey":"user._id","bsonType":"string","description":"用户ID"},"enterpriseId":{"title":"企业ID","foreignKey":"enterprise._id","bsonType":"string","description":"企业ID"},"carInfoId":{"title":"车辆ID","foreignKey":"car_info._id","bsonType":"string","description":"车辆ID"},"time":{"title":"下单时间","bsonType":"timestamp","description":"下单时间"},"status":{"title":"订单状态","bsonType":"int","description":"用户ID 0 临时订单 1 挂帐订单 2 已付订单"}}}
+{
+  "bsonType": "object",
+  "required": [],
+  "permission": {
+    "read": false,
+    "create": false,
+    "update": false,
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "ID，系统自动生成"
+    },
+    "userId": {
+      "title": "用户ID",
+      "foreignKey": "user._id",
+      "bsonType": "string",
+      "description": "用户ID"
+    },
+    "enterpriseId": {
+      "title": "企业ID",
+      "foreignKey": "enterprise._id",
+      "bsonType": "string",
+      "description": "企业ID"
+    },
+    "carInfoId": {
+      "title": "车辆ID",
+      "foreignKey": "car_info._id",
+      "bsonType": "string",
+      "description": "车辆ID"
+    },
+    "time": {
+      "title": "下单时间",
+      "bsonType": "timestamp",
+      "description": "下单时间"
+    },
+    "status": {
+      "title": "订单状态",
+      "bsonType": "int",
+      "description": "用户ID 0 临时订单 1 挂帐订单 2 已付订单"
+    },
+    "responsibleId": {
+      "bsonType": "string",
+      "foreignKey": "user._id",
+      "description": "施工负责人，未指定时默认开单人"
+    },
+    "workStatus": {
+      "bsonType": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "completed"
+      ],
+      "description": "施工状态，与财务状态独立"
+    },
+    "completedAt": {
+      "bsonType": [
+        "timestamp",
+        "null"
+      ],
+      "description": "施工完成时间，重新施工时清空"
+    },
+    "workUpdatedAt": {
+      "bsonType": "timestamp",
+      "description": "施工信息最近修改时间"
+    }
+  }
+}

@@ -36,6 +36,11 @@
 		data() {
 			return {
 				dataList: [{
+					id: 11,
+					icon: 'icon-bill-text',
+					url: '/pages/work_orders/records',
+					text: '工单记录'
+				}, {
 					id: 0,
 					icon: 'icon-bill-text',
 					url: "./billing/billingDetail/ChoseCard",

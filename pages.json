@@ -156,6 +156,10 @@
 			}
 		},
 		{
+			"path": "pages/work_orders/records",
+			"style": { "navigationBarTitleText": "工单记录", "enablePullDownRefresh": true }
+		},
+		{
 			"path": "pages/analytics/analytics",
 			"style": {
 				"navigationBarTitleText": "经营统计",
