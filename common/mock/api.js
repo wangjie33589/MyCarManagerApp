@@ -12,6 +12,7 @@ import {
 	followup_debug
 } from './followup.js'
 import * as S from '../utils/schedule.js'
+import { buildAnalyticsResult } from '../js/analytics-calc.js'
 
 function clone(value) {
 	return JSON.parse(JSON.stringify(value))
@@ -1391,6 +1392,32 @@ function set_technician(data) {
 	return ok({ updated: updated, value: value })
 }
 
+/* ---------------- 经营统计 ---------------- */
+
+/**
+ * 经营统计（本地 mock 版）
+ * 直接读 mock 库里的 order / pay_infos，与首页「今日收入」、订单列表吃同一份数据，
+ * 口径与云函数 analytics_summary 保持一致（见 common/js/analytics-calc.js 顶部说明）。
+ */
+function get_analytics_summary(data) {
+	const db = loadDb()
+	const enterpriseId = currentEnterpriseId(db)
+	const range = toInt(data && data.range, 7)
+	if ([7, 30, 90].indexOf(range) < 0) return fail('range 仅支持 7 / 30 / 90')
+
+	const orders = (db.order || []).filter(item => item.enterpriseId === enterpriseId)
+	const pays = (db.pay_infos || []).filter(item => item.enterpriseId === enterpriseId)
+	const result = buildAnalyticsResult(orders, pays, range, now())
+	result.mock = true
+	return ok(result)
+}
+
+/** 本地 mock 模式不需要造数：数据来自 common/mock/db.js */
+function analyticsTestDataUnsupported(data) {
+	const action = (data && data.action) || 'unknown'
+	return fail('本地 mock 模式下无需造数（action: ' + action + '），数据来自 common/mock/db.js')
+}
+
 /* ---------------- 调试辅助 ---------------- */
 
 function resetMockData() {
@@ -1454,5 +1481,13 @@ export default {
 	set_appointment_status,
 	appointment_to_order,
 	set_technician,
+	get_analytics_summary,
+	analytics_test_data: analyticsTestDataUnsupported,
+	seed_analytics_test_data: analyticsTestDataUnsupported,
+	list_analytics_test_data: analyticsTestDataUnsupported,
+	clear_analytics_test_data: analyticsTestDataUnsupported,
+	create_analytics_test_data: analyticsTestDataUnsupported,
+	update_analytics_test_data: analyticsTestDataUnsupported,
+	remove_analytics_test_data: analyticsTestDataUnsupported,
 	resetMockData
 }

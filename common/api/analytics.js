@@ -1,5 +1,4 @@
 import commoms from "../js/common.js"
-import { buildMockAnalytics } from "../js/analytics-mock.js"
 import analyticsConfig from "../js/analytics-config.js"
 
 /**
@@ -13,9 +12,12 @@ import analyticsConfig from "../js/analytics-config.js"
  *   400 参数非法        401 未登录/用户不存在     403 未启用/无权限
  *   404 记录不存在      500 服务端异常            -1 云函数无返回
  *   -2  网络/调用异常（云函数未部署、断网、超时等）
+ *
+ * mock 说明：
+ *   本文件只负责「真实云函数调用」。本地 mock 由 common/mock/api.js 提供同名实现，
+ *   由 common/api/index.js 的 USE_MOCK 开关统一切换（开关在 common/mock/config.js）。
+ *   这样统计页与首页、订单列表共用同一份 mock 数据，不会各造一套。
  */
-
-const MOCK_DELAY = 350
 
 /** 统一调用云函数并把各种异常归一成可展示的结构 */
 function callFunction(name, data) {
@@ -65,14 +67,6 @@ function callFunction(name, data) {
  */
 export const get_analytics_summary = (data) => {
 	const payload = Object.assign({}, data || {})
-
-	if (analyticsConfig.useMock) {
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(buildMockAnalytics(Number(payload.range) || 7))
-			}, MOCK_DELAY)
-		})
-	}
 
 	// 门店由云函数在服务端用 userId 反查，客户端传的 enterpriseId 一律丢弃
 	commoms.setDataUserId(payload)
